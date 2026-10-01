@@ -1,0 +1,22 @@
+[Unit]
+Description=CleanAI Metadata Stripper Telegram Bot
+After=network.target
+
+[Service]
+Type=simple
+User=ubuntu
+WorkingDirectory=/opt/clean-ai-metadata-bot
+ExecStart=/opt/clean-ai-metadata-bot/.venv/bin/python main.py
+Restart=always
+RestartSec=5
+EnvironmentFile=/opt/clean-ai-metadata-bot/.env
+StandardOutput=journal
+StandardError=journal
+
+# Security Sandboxing
+NoNewPrivileges=true
+ProtectSystem=strict
+ReadWritePaths=/opt/clean-ai-metadata-bot/data /opt/clean-ai-metadata-bot/scratch
+
+[Install]
+WantedBy=multi-user.target

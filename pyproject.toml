@@ -1,0 +1,23 @@
+[project]
+name = "clean-ai-metadata-bot"
+version = "0.1.0"
+description = "Lossless AI Metadata Stripper Bot for Telegram (BTO Standard)"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "aiosqlite>=0.20.0",
+    "pillow>=10.2.0",
+    "python-dotenv>=1.0.0",
+    "python-telegram-bot>=21.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_mode = "auto"
+testpaths = ["tests"]
