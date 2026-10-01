@@ -21,3 +21,6 @@ scratch/
 # OS artifacts
 Thumbs.db
 .DS_Store
+
+# Local Agent & MCP configurations
+.agents/mcp_config.json
