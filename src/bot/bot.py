@@ -61,6 +61,24 @@ async def _post_init(app: Application) -> None:
             server = await asyncio.start_server(handle_client, "0.0.0.0", port)
             app.bot_data["health_server"] = server
             logger.info("PaaS health-check HTTP server listening on port %d", port)
+
+            # Start keep-alive loop to prevent Render Free tier from sleeping after 15 minutes
+            ext_url = os.getenv("RENDER_EXTERNAL_URL", "https://clean-ai-metadata-bot.onrender.com")
+
+            async def _keep_alive_loop() -> None:
+                import httpx
+
+                await asyncio.sleep(60)
+                async with httpx.AsyncClient() as client:
+                    while True:
+                        try:
+                            resp = await client.get(ext_url, timeout=15.0)
+                            logger.info("Keep-alive ping to %s: %d", ext_url, resp.status_code)
+                        except Exception as ping_err:
+                            logger.debug("Keep-alive ping note: %s", ping_err)
+                        await asyncio.sleep(600)  # Ping every 10 minutes
+
+            app.bot_data["keep_alive_task"] = asyncio.create_task(_keep_alive_loop())
         except Exception as exc:
             logger.warning("Could not start PaaS health-check server on port %s: %s", port_str, exc)
 

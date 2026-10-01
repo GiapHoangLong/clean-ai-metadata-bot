@@ -41,9 +41,9 @@ def main() -> None:
     # Initialize SQLite database schema
     asyncio.run(init_db())
 
-    # Build and run application
+    # Build and run application (preserve pending updates so messages during restarts are processed)
     app = build_application(TELEGRAM_BOT_TOKEN)
-    app.run_polling(drop_pending_updates=True)
+    app.run_polling(drop_pending_updates=False)
 
 
 if __name__ == "__main__":
